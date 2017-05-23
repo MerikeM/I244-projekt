@@ -8,8 +8,8 @@
     <body>
         <div id="menu">
             <a class="menuitem" href="?page=main">Avaleht</a>
-            <?php if (isset($_session['user'])):?>
-                
+            <?php if (!empty($_SESSION['user'])):?>
+                <a class="menuitem" href="?page=logout">Logi välja</a>
             <?php else: ?>
                 <a class="menuitem" href="?page=reg">Registreeri</a>
                 <a class="menuitem" href="?page=login">Logi sisse</a>

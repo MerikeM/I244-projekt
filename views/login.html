@@ -1,1 +1,14 @@
-Siia tuleb sisselogimine...
+<?php
+    if (isset($errors)):
+        foreach($errors as $error): ?>
+            <p class="error"><?php echo $error; ?> </p>
+<?php endforeach;
+endif; ?>
+        
+<form id="login" action="?page=login" method="POST">
+    Kasutajanimi: <br>
+    <input type="text" name="user" value=""><br>
+    Parool: <br>
+    <input type="password" name="pass"><br>
+    <input type="submit" value="Logi sisse">
+</form>

@@ -1,5 +1,6 @@
 <?php
 require_once('functions.php');
+session_start();
 connect_db();
 
 $page="home";
@@ -14,6 +15,9 @@ switch($page){
         break;
     case('login'):
         login();
+        break;
+    case('logout'):
+        logout();
         break;
               
     default:
