@@ -5,17 +5,22 @@
 <?php endforeach;
 endif; ?>
 
-<form action="?page=reg" method="POST">
-    Kasutajanimi: <br>
+<form id="register" action="?page=reg" method="POST">
+    Kasutajanimi:* <br>
     <input type="text" name="user" value=""><br>
-    Parool: <br>
+    Parool:* <br>
     <input type="password" name="pass"><br>
-    Korda parooli: <br>
-    <input type="password" name="pass2"><br>
-    E-mail: <br>
-    <input type="text" name="email"><br>
+    Korda parooli:* <br>
+    <input type="password" name="pass2" onblur="validatePass()"> <span id="wrongpass" class="error"></span>
+    <br>
+    E-mail:* <br>
+    <input type="text" name="email" onblur="validateEmail()">
+    <span id="wrongemail" class="error"></span>
+    <br>
     Vanus: <br>
-    <input type="text" name="age"><br>
+    <input type="text" name="age" onblur="validateAge()">
+    <span id="wrongage" class="error"></span>
+    <br>
     Sugu: <br>
     <input type="radio" name="gender" value="mees">Mees<br>
     <input type="radio" name="gender" value="naine">Naine<br>
