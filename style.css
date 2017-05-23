@@ -1,0 +1,26 @@
+body {
+    background: lightgreen;
+    margin-top: 0px;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+#menu {
+    background: white;
+    height: 80px;
+    margin-bottom: 50px;
+}
+
+.menuitem {
+    font-size: 30px;
+    color: green;
+    display: inline-block;
+    margin: 15px;
+
+    text-decoration: none;
+}
+
+.error {
+    color:red;
+    font-size: 20px;
+}

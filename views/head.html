@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <div id="menu">
+            <a class="menuitem" href="?page=main">Avaleht</a>
+            <?php if (isset($_session['user'])):?>
+                
+            <?php else: ?>
+                <a class="menuitem" href="?page=reg">Registreeri</a>
+                <a class="menuitem" href="?page=login">Logi sisse</a>
+            <?php endif; ?>
+        </div>

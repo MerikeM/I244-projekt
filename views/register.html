@@ -1,0 +1,25 @@
+<?php
+    if (isset($errors)):
+        foreach($errors as $error): ?>
+            <p class="error"><?php echo $error; ?> </p>
+<?php endforeach;
+endif; ?>
+
+<form action="?page=reg" method="POST">
+    Kasutajanimi: <br>
+    <input type="text" name="user" value=""><br>
+    Parool: <br>
+    <input type="password" name="pass"><br>
+    Korda parooli: <br>
+    <input type="password" name="pass2"><br>
+    E-mail: <br>
+    <input type="text" name="email"><br>
+    Vanus: <br>
+    <input type="text" name="age"><br>
+    Sugu: <br>
+    <input type="radio" name="gender" value="mees">Mees<br>
+    <input type="radio" name="gender" value="naine">Naine<br>
+    <input type="submit" value="Registreeri">
+</form>
+
+
