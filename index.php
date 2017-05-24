@@ -19,7 +19,12 @@ switch($page){
     case('logout'):
         logout();
         break;
-              
+    case('add'):
+        add_poem();
+        break;
+    case('poems'):
+        show_poems();
+        break;
     default:
         include_once('views/home.html');
     break;

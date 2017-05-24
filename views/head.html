@@ -8,7 +8,9 @@
     <body>
         <div id="menu">
             <a class="menuitem" href="?page=main">Avaleht</a>
+            <a class="menuitem" href="?page=poems">Luuletused</a>
             <?php if (!empty($_SESSION['user'])):?>
+                <a class="menuitem" href="?page=add">Lisa luuletus</a>
                 <a class="menuitem" href="?page=logout">Logi välja</a>
             <?php else: ?>
                 <a class="menuitem" href="?page=reg">Registreeri</a>

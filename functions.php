@@ -65,8 +65,8 @@ function login(){
             $sql = "SELECT * FROM mmeizner_kasutajad WHERE user = '$user' AND pass = SHA1('$pass')";
             $result = mysqli_query($connection, $sql) or die($sql ." - ".mysqli_error($connection));
             if (mysqli_num_rows($result)>0){
-                $_SESSION['user'] = $user;
                 $data = mysqli_fetch_assoc($result);
+                $_SESSION['user'] = $data['id'];
                 $role = $data['role'];
                 $_SESSION['role'] = $role;
                 header("Location: ?");
@@ -83,6 +83,28 @@ function logout(){
     header("Location: ?");
 }
 
+function add_poem(){
+    global $connection;
+    if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+        if (empty($_POST['poem'])){
+            $error = "Palun sisestage luuletus";
+        } else {
+            $title = mysqli_real_escape_string($connection, $_POST['title']);
+            $poem = mysqli_real_escape_string($connection, $_POST['poem']);
+            $user = $_SESSION['user'];
+            $sql = "INSERT INTO mmeizner_luuletused (title, poem, user) VALUES ('$title', '$poem', '$user')";
+            mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
+            header("Location: ?page=poems");
+        }
+    }
+    
+    include_once('views/add.html');
+}
+
+function show_poems(){
+    
+    include_once('views/poems.html');
+}
 
 
 
