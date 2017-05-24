@@ -1,0 +1,22 @@
+<?php 
+while($p = mysqli_fetch_assoc($poems)): ?>
+
+<div class="poem"> 
+    <h2><?php echo $p['title'] ?></h2>
+    <pre><?php echo $p['poem'] ?></pre>
+    <span class="userinfo"><?php echo $p['user'];
+    if (!empty($p['gender'])){
+        echo (", " . $p['gender']);
+    }
+    if (!empty($p['age']) && $p['age'] != 0){
+        echo (", ". $p['age'] . " a");
+    } ?>
+    </span>
+    <span class="time">
+    <?php echo $p['time']; ?>
+    </span>
+
+
+</div>
+
+<?php endwhile; ?>

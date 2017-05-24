@@ -24,3 +24,27 @@ body {
     color:red;
     font-size: 20px;
 }
+
+.poem {
+    float: left;
+    width: 500px;
+    border: 3px solid black;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 5px;
+    background: lightblue;
+}
+
+pre {
+    font: inherit;
+    font-size: 20px;
+}
+
+.userinfo {
+    color: darkslategray;
+}
+
+.time {
+    float: right;
+    color: darkslategray;
+}

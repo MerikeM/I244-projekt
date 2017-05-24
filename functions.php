@@ -91,7 +91,7 @@ function add_poem(){
         } else {
             $title = mysqli_real_escape_string($connection, $_POST['title']);
             $poem = mysqli_real_escape_string($connection, $_POST['poem']);
-            $user = $_SESSION['user'];
+            $user = mysqli_real_escape_string($connection, $_SESSION['user']);
             $sql = "INSERT INTO mmeizner_luuletused (title, poem, user) VALUES ('$title', '$poem', '$user')";
             mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
             header("Location: ?page=poems");
@@ -102,7 +102,19 @@ function add_poem(){
 }
 
 function show_poems(){
+    global $connection;
+    $sql = "SELECT mmeizner_luuletused.title,
+        mmeizner_luuletused.poem, 
+        mmeizner_luuletused.time,
+        mmeizner_kasutajad.user,
+        mmeizner_kasutajad.age,
+        mmeizner_kasutajad.gender
+        FROM mmeizner_luuletused, mmeizner_kasutajad
+        WHERE mmeizner_luuletused.user = mmeizner_kasutajad.id
+        ORDER BY mmeizner_luuletused.time DESC";
+    $poems = mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
     
+            
     include_once('views/poems.html');
 }
 
