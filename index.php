@@ -26,7 +26,7 @@ switch($page){
         show_poems();
         break;
     default:
-        include_once('views/home.html');
+        home();
     break;
 }
 

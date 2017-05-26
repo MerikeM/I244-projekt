@@ -10,6 +10,24 @@ function connect_db(){
 	mysqli_query($connection, "SET CHARACTER SET UTF8") or die("Ei saanud baasi utf-8-sse - ".mysqli_error($connection));
 }
 
+function home(){
+    global $connection;
+    $sql = "SELECT
+        mmeizner_luuletused.title,
+        mmeizner_luuletused.poem,
+        mmeizner_kasutajad.id AS userid,
+        mmeizner_kasutajad.user,
+        mmeizner_kasutajad.age,
+        mmeizner_kasutajad.gender,
+		AVG (mmeizner_hinded.rating) AS average
+        FROM mmeizner_luuletused JOIN mmeizner_kasutajad ON mmeizner_luuletused.user = mmeizner_kasutajad.id LEFT JOIN mmeizner_hinded ON mmeizner_luuletused.id = mmeizner_hinded.poem
+		GROUP BY mmeizner_luuletused.id
+        ORDER BY average DESC";
+    $poems = mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
+         
+    include_once('views/home.html');
+}
+
 function register(){
     global $connection;
     
