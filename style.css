@@ -57,3 +57,7 @@ pre {
 .rating {
     display: none;
 }
+
+.delete {
+    float: right;
+}

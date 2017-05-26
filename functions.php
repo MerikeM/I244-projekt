@@ -118,11 +118,23 @@ function show_poems(){
         } else {
             $message = "Olete selle luuletuse poolt juba hääletanud";
         }
+    } else if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete'])){
+        $poemid = mysqli_real_escape_string($connection, $_GET['delete']);
+        if ($_SESSION['role'] === 'admin'){
+            $sql = "DELETE FROM mmeizner_luuletused WHERE id='$poemid'";
+        } else {
+            $userid = mysqli_real_escape_string($connection, $_SESSION['user']);
+            $sql = "DELETE FROM mmeizner_luuletused WHERE id='$poemid' AND user='$userid'";
+        }
+        mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
+        header("Location: ?page=poems");
     }
-    $sql = "SELECT mmeizner_luuletused.id,
+    
+    $sql = "SELECT mmeizner_luuletused.id AS poemid,
         mmeizner_luuletused.title,
         mmeizner_luuletused.poem, 
         mmeizner_luuletused.time,
+        mmeizner_kasutajad.id AS userid,
         mmeizner_kasutajad.user,
         mmeizner_kasutajad.age,
         mmeizner_kasutajad.gender,
@@ -166,19 +178,12 @@ function get_user_votes($id){
     $sql = "SELECT poem, rating FROM mmeizner_hinded WHERE user='$id'";
     $result = mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
     
+    $user_ratings[] = "";
     while ($a = mysqli_fetch_assoc($result)){
         $user_ratings[$a['poem']] = $a['rating'];
     }
     
     return $user_ratings;
-}
-
-function get_average_rating(){
-    global $connection;
-    $sql = "SELECT id, AVG(rating) FROM mmeizner_hinded GROUP BY id";
-    $result = mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
-    
-    return result;
 }
 
 
