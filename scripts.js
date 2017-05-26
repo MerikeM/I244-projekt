@@ -38,3 +38,20 @@ function validateAge(){
         document.getElementById("wrongage").innerHTML = "";
     }
 }
+
+function showPoem(poem){
+    var current = document.getElementById("open");
+    if (current != null){
+        current.getElementsByClassName("end").item(0).style.display = "none";
+        current.getElementsByClassName("rating").item(0).style.display = "none";
+        current.id="";
+    }
+    poem.getElementsByClassName("end").item(0).style.display="block";
+    poem.getElementsByClassName("rating").item(0).style.display="block";
+    poem.id = "open";
+}
+
+function rate(button){
+    var form = button.parentNode;
+    form.submit();
+}

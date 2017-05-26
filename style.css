@@ -38,6 +38,7 @@ body {
 pre {
     font: inherit;
     font-size: 20px;
+    margin-top: 0px;
 }
 
 .userinfo {
@@ -47,4 +48,12 @@ pre {
 .time {
     float: right;
     color: darkslategray;
+}
+
+.end {
+    display: none;
+}
+
+.rating {
+    display: none;
 }

@@ -103,21 +103,83 @@ function add_poem(){
 
 function show_poems(){
     global $connection;
-    $sql = "SELECT mmeizner_luuletused.title,
+    
+    if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+        $poem = mysqli_real_escape_string($connection, $_POST['poem']);
+        $rating = mysqli_real_escape_string($connection, $_POST['rating']);
+        $user = mysqli_real_escape_string($connection, $_SESSION['user']);
+        
+        $sql = "SELECT * FROM mmeizner_hinded WHERE poem='$poem' AND user='$user'";
+        $result = mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
+        if (mysqli_num_rows($result) == 0){
+            $sql = "INSERT INTO mmeizner_hinded (poem, user, rating) VALUES ('$poem', '$user', '$rating')";
+            mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
+            $message = "Hääletatud";
+        } else {
+            $message = "Olete selle luuletuse poolt juba hääletanud";
+        }
+    }
+    $sql = "SELECT mmeizner_luuletused.id,
+        mmeizner_luuletused.title,
         mmeizner_luuletused.poem, 
         mmeizner_luuletused.time,
         mmeizner_kasutajad.user,
         mmeizner_kasutajad.age,
-        mmeizner_kasutajad.gender
-        FROM mmeizner_luuletused, mmeizner_kasutajad
-        WHERE mmeizner_luuletused.user = mmeizner_kasutajad.id
+        mmeizner_kasutajad.gender,
+		AVG (mmeizner_hinded.rating) AS average
+        FROM mmeizner_luuletused JOIN mmeizner_kasutajad ON mmeizner_luuletused.user = mmeizner_kasutajad.id LEFT JOIN mmeizner_hinded ON mmeizner_luuletused.id = mmeizner_hinded.poem
+		GROUP BY mmeizner_luuletused.id
         ORDER BY mmeizner_luuletused.time DESC";
     $poems = mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
-    
-            
+         
     include_once('views/poems.html');
 }
 
+function first_three_lines($input){
+    $temp1 = substr($input, strpos($input, "\n")+1);
+    $temp2 = substr($temp1, strpos($temp1, "\n")+1);
+    if (strpos($temp2, "\n")===FALSE){
+        return $input;
+    }
+    $temp3 = substr($temp2, strpos($temp2, "\n")+1);
+    $length = strlen($input)-strlen($temp3);
+    
+    $first = substr($input, 0, $length);
+    return $first;
+    
+}
+
+function lines_from_fourth($input){
+    $temp1 = substr($input, strpos($input, "\n")+1);
+    $temp2 = substr($temp1, strpos($temp1, "\n")+1);
+    if (strpos($temp2, "\n")===FALSE){
+        return "";
+    }
+    $temp3 = substr($temp2, strpos($temp2, "\n")+1);
+    return $temp3;
+}
+
+function get_user_votes($id){
+    global $connection;
+    
+    $user = mysqli_real_escape_string($connection, $id);
+    $sql = "SELECT poem, rating FROM mmeizner_hinded WHERE user='$id'";
+    $result = mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
+    
+    while ($a = mysqli_fetch_assoc($result)){
+        $user_ratings[$a['poem']] = $a['rating'];
+    }
+    
+    return $user_ratings;
+}
+
+function get_average_rating(){
+    global $connection;
+    $sql = "SELECT id, AVG(rating) FROM mmeizner_hinded GROUP BY id";
+    $result = mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
+    
+    return result;
+}
 
 
 ?>

@@ -1,9 +1,18 @@
-<?php 
+<?php if (isset($message)): ?>
+     <p class="error"><?php echo $message; ?> </p>
+<?php endif ?>
+
+<?php
+if (isset($_SESSION['user'])){
+    $ratings = get_user_votes($_SESSION['user']);
+} else {
+    $ratings[] = "";
+}
 while($p = mysqli_fetch_assoc($poems)): ?>
 
-<div class="poem"> 
+<div class="poem" onclick="showPoem(this)"> 
     <h2><?php echo $p['title'] ?></h2>
-    <pre><?php echo $p['poem'] ?></pre>
+    <pre><span class="start"><?php echo (first_three_lines($p['poem'])) ?></span><span class="end"><?php echo (lines_from_fourth($p['poem'])) ?></span></pre>
     <span class="userinfo"><?php echo $p['user'];
     if (!empty($p['gender'])){
         echo (", " . $p['gender']);
@@ -15,6 +24,32 @@ while($p = mysqli_fetch_assoc($poems)): ?>
     <span class="time">
     <?php echo $p['time']; ?>
     </span>
+    <br>
+    <span class="rating">
+        <?php 
+        $poem_id = $p['id'];
+        if (empty($ratings[$poem_id])): ?>
+            <?php if(isset($_SESSION['user'])): ?>
+                <form id="rating" action="?page=poems" method="POST">
+                    <input type="hidden" name="poem" value="<?php echo $p['id']?>">
+                    1 <input type="radio" value="1" name="rating" onclick="rate(this)">
+                    2 <input type="radio" value="2" name="rating" onclick="rate(this)">
+                    3 <input type="radio" value="3" name="rating" onclick="rate(this)">
+                    4 <input type="radio" value="4" name="rating" onclick="rate(this)">
+                    5 <input type="radio" value="5" name="rating" onclick="rate(this)">
+                </form>
+            <?php endif ?>
+        <?php else: ?>
+            Teie hinne: <?php echo $ratings[$poem_id]; ?><br>
+        <?php endif; ?>
+            Keskmine hinne: 
+        <?php if (empty($p['average'])){
+            echo ("-");
+        } else {
+            echo $p['average'];
+        } ?>
+    </span>
+    
 
 
 </div>
