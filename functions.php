@@ -65,13 +65,16 @@ function register(){
         if (!isset($errors)){
             $sql = "INSERT INTO mmeizner_kasutajad (user, pass, email, age, gender) VALUES ('$user', '$pass', '$email', '$age', '$gender')";
             mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
+            header("Location: ?page=poems");
         }
+        
     }
     include_once('views/register.html');
 }
 
 function login(){
     global $connection;
+    session_regenerate_id();
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         if (empty($_POST['user'])){
             $errors[] = "Palun sisestage kasutajanimi";
@@ -103,25 +106,28 @@ function logout(){
 
 function add_poem(){
     global $connection;
-    if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-        if (empty($_POST['poem'])){
-            $error = "Palun sisestage luuletus";
-        } else {
-            $title = mysqli_real_escape_string($connection, $_POST['title']);
-            $poem = mysqli_real_escape_string($connection, $_POST['poem']);
-            $user = mysqli_real_escape_string($connection, $_SESSION['user']);
-            $sql = "INSERT INTO mmeizner_luuletused (title, poem, user) VALUES ('$title', '$poem', '$user')";
-            mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
-            header("Location: ?page=poems");
+    if (isset($_SESSION['user'])){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+            if (empty($_POST['poem'])){
+                $error = "Palun sisestage luuletus";
+            } else {
+                $title = mysqli_real_escape_string($connection, $_POST['title']);
+                $poem = mysqli_real_escape_string($connection, $_POST['poem']);
+                $user = mysqli_real_escape_string($connection, $_SESSION['user']);
+                $sql = "INSERT INTO mmeizner_luuletused (title, poem, user) VALUES ('$title', '$poem', '$user')";
+                mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
+                header("Location: ?page=poems");
+            }
         }
+        include_once('views/add.html');
+    } else {
+        login();
     }
-    
-    include_once('views/add.html');
 }
 
 function show_poems(){
     global $connection;
-    
+    //hääletamine
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         $poem = mysqli_real_escape_string($connection, $_POST['poem']);
         $rating = mysqli_real_escape_string($connection, $_POST['rating']);
@@ -136,7 +142,7 @@ function show_poems(){
         } else {
             $message = "Olete selle luuletuse poolt juba hääletanud";
         }
-    } else if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete'])){
+    } else if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete'])){ //kustutamine
         $poemid = mysqli_real_escape_string($connection, $_GET['delete']);
         if ($_SESSION['role'] === 'admin'){
             $sql = "DELETE FROM mmeizner_luuletused WHERE id='$poemid'";
@@ -145,6 +151,10 @@ function show_poems(){
             $sql = "DELETE FROM mmeizner_luuletused WHERE id='$poemid' AND user='$userid'";
         }
         mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
+        if (mysqli_affected_rows ($connection) > 0){
+            $sql = "DELETE FROM mmeizner_hinded WHERE poem='$poemid'";
+            mysqli_query($connection, $sql) or die ($sql . " - " . mysqli_error($connection));
+        }
         header("Location: ?page=poems");
     }
     
@@ -203,6 +213,5 @@ function get_user_votes($id){
     
     return $user_ratings;
 }
-
 
 ?>

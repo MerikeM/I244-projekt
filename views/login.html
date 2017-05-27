@@ -7,8 +7,8 @@ endif; ?>
         
 <form id="login" action="?page=login" method="POST">
     Kasutajanimi: <br>
-    <input type="text" name="user" value=""><br>
+    <input type="text" name="user" value="<?php echo (isset($_POST['user']))?$_POST['user']:'';?>"><br>
     Parool: <br>
-    <input type="password" name="pass"><br>
+    <input type="password" name="pass" value="<?php echo (isset($_POST['pass']))?$_POST['pass']:'';?>"><br>
     <input type="submit" value="Logi sisse">
 </form>
