@@ -9,57 +9,57 @@ if (isset($_SESSION['user'])){
     $ratings[] = "";
 }
 while($p = mysqli_fetch_assoc($poems)): ?>
-
-<div class="poem" onclick="showPoem(this)"> 
-    <h2><?php echo $p['title'] ?></h2>
-    <pre><span class="start"><?php echo (first_three_lines($p['poem'])) ?></span><span class="end"><?php echo (lines_from_fourth($p['poem'])) ?></span></pre>
-    <span class="userinfo"><?php echo $p['user'];
-    if (!empty($p['gender'])){
-        echo (", " . $p['gender']);
-    }
-    if (!empty($p['age']) && $p['age'] != 0){
-        echo (", ". $p['age'] . " a");
-    } ?>
-    </span>
-    <span class="time">
-    <?php echo $p['time']; ?>
-    </span>
-    <br>
-        <span class="rating">
-            <?php if(isset($_SESSION['user'])): ?>
+    <div class="poem" onclick="showPoem(this)"> 
+        <h2><?php echo htmlspecialchars($p['title']); ?></h2>
+        <pre><span class="start"><?php echo htmlspecialchars((first_three_lines($p['poem']))); ?></span><span class="end"><?php echo htmlspecialchars((lines_from_fourth($p['poem']))); ?></span>
+        </pre>
+        <span class="userinfo">
             <?php 
-            $poem_id = $p['poemid'];
-            if (empty($ratings[$poem_id])): ?>
-                    <form id="rating" action="?page=poems" method="POST">
-                        <input type="hidden" name="poem" value="<?php echo $p['poemid']?>">
-                        1 <input type="radio" value="1" name="rating" onclick="rate(this)">
-                        2 <input type="radio" value="2" name="rating" onclick="rate(this)">
-                        3 <input type="radio" value="3" name="rating" onclick="rate(this)">
-                        4 <input type="radio" value="4" name="rating" onclick="rate(this)">
-                        5 <input type="radio" value="5" name="rating" onclick="rate(this)">
-                    </form>
-                
-            <?php else: ?>
-                Teie hinne: <?php echo $ratings[$poem_id]; ?><br>
-            <?php endif; ?>
-            <?php endif; ?>
-                Keskmine hinne: 
-            <?php if (empty($p['average'])){
-                echo ("-");
-            } else {
-                echo $p['average'];
-            } ?>
-            <br>
-            <?php if(isset($_SESSION['user'])): ?>
-            <?php if ($p['userid'] === $_SESSION['user'] || $_SESSION['role'] === "admin"): ?>
-                <span class="delete"><?php echo "<a href=\"?page=poems&delete=".$p['poemid']."\">Kustuta</a>" ?>
-                </span>
-            <?php endif; ?>
-            <?php endif; ?>
+                echo htmlspecialchars($p['user']);
+                if (!empty($p['gender'])){
+                    echo (", " . htmlspecialchars($p['gender']));
+                }
+                if (!empty($p['age']) && $p['age'] != 0){
+                    echo (", ". htmlspecialchars($p['age'] . " a"));
+                } 
+            ?>
         </span>
-    
-
-
-</div>
-
+        <span class="time">
+            <?php echo htmlspecialchars($p['time']); ?>
+        </span>
+        <br>
+            <span class="rating">
+                <?php if(isset($_SESSION['user'])): ?>
+                <?php 
+                    $poem_id = $p['poemid'];
+                    if (empty($ratings[$poem_id])): ?>
+                        <form id="rating" action="?page=poems" method="POST">
+                            <input type="hidden" name="poem" value="<?php echo htmlspecialchars($p['poemid']); ?>">
+                            1 <input type="radio" value="1" name="rating" onclick="rate(this)">
+                            2 <input type="radio" value="2" name="rating" onclick="rate(this)">
+                            3 <input type="radio" value="3" name="rating" onclick="rate(this)">
+                            4 <input type="radio" value="4" name="rating" onclick="rate(this)">
+                            5 <input type="radio" value="5" name="rating" onclick="rate(this)">
+                        </form>
+                    <?php else: ?>
+                        Teie hinne: <?php echo htmlspecialchars($ratings[$poem_id]); ?><br>
+                    <?php endif; ?>
+                <?php endif; ?>
+                    Keskmine hinne: 
+                <?php 
+                    if (empty($p['average'])){
+                        echo ("-");
+                    } else {
+                        echo htmlspecialchars($p['average']);
+                    } ?>
+                <br>
+                <?php if(isset($_SESSION['user'])): ?>
+                    <?php if ($p['userid'] === $_SESSION['user'] || $_SESSION['role'] === "admin"): ?>
+                        <span class="delete">
+                            <?php echo "<a href=\"?page=poems&delete=".$p['poemid']."\">Kustuta</a>" ?>
+                        </span>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </span>
+    </div>
 <?php endwhile; ?>
